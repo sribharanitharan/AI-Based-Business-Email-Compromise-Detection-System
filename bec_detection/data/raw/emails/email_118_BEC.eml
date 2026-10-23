@@ -1,0 +1,18 @@
+From: IT Helpdesk <support@microsoft-security-alert.xyz>
+To: sribharani101@gmail.com
+Date: Tue, 13 Oct 2026 13:02:44 +0530
+Subject: CRITICAL: Corporate Email Password Expiring in 2 Hours
+Message-ID: <bec-118-36348@corp-mail.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Authentication-Results: mx.google.com; spf=fail smtp.mailfrom=IT Helpdesk <support@microsoft-security-alert.xyz>; dkim=fail; dmarc=fail
+Received-SPF: fail (google.com: domain designates sender IP)
+
+Dear Sri,
+
+Your corporate email password will expire today at 5:00 PM. To prevent disruption in receiving emails, you must retain your existing password by verifying your credentials at the link below:
+
+http://192.168.1.105/auth/login?user=sribharani101@gmail.com
+
+IT Security Operations

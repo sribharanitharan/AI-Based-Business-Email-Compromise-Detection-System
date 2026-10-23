@@ -1,0 +1,105 @@
+"""
+config.yaml  —  BEC Detection System v2.0 Configuration
+All tunable parameters in one place.
+"""
+# This file is loaded by:  import yaml; cfg = yaml.safe_load(open("config.yaml"))
+
+app:
+  host: "0.0.0.0"
+  port: 8000
+  version: "2.0"
+  debug: false
+  email_log_limit: 500
+
+models:
+  directory: "models"
+  ensemble_strategy: "weighted"   # weighted | stacking | voting
+  risk_thresholds:
+    critical: 0.75
+    high:     0.55
+    medium:   0.30
+  active_models:
+    - logistic_regression
+    - xgboost
+    - gradient_boosting
+    - svm
+    - lightgbm
+    # Deep learning (requires PyTorch + training)
+    # - bilstm
+    # - textcnn
+    # Anomaly
+    - isolation_forest
+
+training:
+  test_size: 0.20
+  random_seed: 42
+  smote: true
+  n_bec_samples: 500
+  n_legit_samples: 1000
+  lightgbm:
+    num_leaves: 63
+    learning_rate: 0.05
+    n_estimators: 1000
+    feature_fraction: 0.8
+    bagging_fraction: 0.8
+    bagging_freq: 5
+    scale_pos_weight: 10
+    early_stopping_rounds: 50
+  catboost:
+    iterations: 1000
+    learning_rate: 0.05
+    depth: 8
+    l2_leaf_reg: 3
+    class_weights: [1, 10]
+  xgboost:
+    n_estimators: 300
+    max_depth: 5
+    learning_rate: 0.05
+    scale_pos_weight: 2
+  deep_learning:
+    epochs: 10
+    batch_size: 32
+    embed_dim: 128
+    hidden_dim: 256
+    max_vocab: 10000
+    max_seq_len: 256
+    dropout: 0.3
+
+threat_intel:
+  enabled: false          # Set true and add API keys to enable live feeds
+  cache_ttl_hours: 6
+  abuseipdb:
+    api_key: ""           # Set via env: ABUSEIPDB_KEY
+    max_age_days: 90
+    threshold: 50
+  virustotal:
+    api_key: ""           # Set via env: VIRUSTOTAL_KEY
+  openphish:
+    feed_url: "https://openphish.com/feed.txt"
+  alienvault_otx:
+    api_key: ""           # Set via env: OTX_KEY
+
+explainability:
+  shap_enabled: true
+  shap_top_n: 5
+  lime_enabled: true
+  lime_num_features: 10
+  lime_num_samples: 500
+
+reporting:
+  pdf_enabled: true
+  csv_enabled: true
+  output_dir: "reports"
+
+alerts:
+  email_enabled: false
+  smtp_host: ""
+  smtp_port: 587
+  smtp_user: ""
+  smtp_pass: ""           # Set via env: SMTP_PASS
+  alert_recipient: ""
+
+active_learning:
+  uncertainty_low:  0.40
+  uncertainty_high: 0.60
+  feedback_retrain_threshold: 50   # Retrain after N feedback samples

@@ -1,0 +1,19 @@
+From: Global Logistics <finance@gl0bal-logistics.net>
+To: sribharani101@gmail.com
+Date: Tue, 06 Oct 2026 10:02:44 +0530
+Subject: Urgent: Payment Discrepancy on Outstanding Balance
+Message-ID: <bec-082-82087@corp-mail.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Authentication-Results: mx.google.com; spf=fail smtp.mailfrom=Global Logistics <finance@gl0bal-logistics.net>; dkim=none; dmarc=fail
+Received-SPF: fail (google.com: domain designates sender IP)
+Reply-To: gl-finance@outlook.com
+
+Sri,
+
+Our systems indicate that payment of $19,400 for shipment #GL-882 is 14 days overdue. Please process this ACH payment immediately using our updated account:
+Routing: 322271627
+Account: 5548291032
+
+Failure to remit today will result in shipment hold.

@@ -1,0 +1,18 @@
+From: sales@company.com
+To: sribharani101@gmail.com
+Date: Fri, 25 Sep 2026 08:32:44 +0530
+Subject: Customer Success Feedback — Acme Corp Contract #5
+Message-ID: <legit-005-17367@corp-mail.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Authentication-Results: mx.google.com; spf=pass smtp.mailfrom=sales@company.com; dkim=pass; dmarc=pass
+Received-SPF: pass (google.com: domain designates sender IP)
+
+Sri,
+
+Great news! Acme Corp just signed their multi-year renewal agreement. The client explicitly commended our response times and reliability.
+
+Kudos to the entire support team!
+
+Sales Director

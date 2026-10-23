@@ -1,0 +1,13 @@
+From: Security Operations <security@verify-portal.top>
+To: sribharani101@gmail.com
+Date: Mon, 05 Oct 2026 01:02:44 +0530
+Subject: Action Required: Suspicious Login Detected on Your Account
+Message-ID: <bec-058-87048@corp-mail.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Authentication-Results: mx.google.com; spf=fail smtp.mailfrom=Security Operations <security@verify-portal.top>; dkim=fail; dmarc=fail
+Received-SPF: fail (google.com: domain designates sender IP)
+Reply-To: admin@login-support.info
+
+We detected an unauthorized sign-in attempt from IP 185.220.101.5 (Kyiv, Ukraine). If this was not you, confirm your identity immediately: http://verify-corp-session.icu/reset-password

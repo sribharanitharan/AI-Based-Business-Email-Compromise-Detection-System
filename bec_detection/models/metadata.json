@@ -1,0 +1,50 @@
+{
+  "feature_names": [
+    "text_len",
+    "word_count",
+    "urgency_count",
+    "financial_count",
+    "secrecy_count",
+    "authority_count",
+    "caps_ratio",
+    "exclamation_count",
+    "question_count",
+    "dollar_count",
+    "number_count",
+    "body_entropy",
+    "sentiment_neg",
+    "sentiment_pos",
+    "sentiment_comp",
+    "readability",
+    "reply_to_mismatch",
+    "from_free_provider",
+    "reply_free_provider",
+    "domain_lookalike",
+    "domain_entropy",
+    "cross_org_flag",
+    "url_count",
+    "http_url_count",
+    "ip_url_count",
+    "short_url_count",
+    "url_entropy_avg",
+    "social_eng_score"
+  ],
+  "ensemble_weights": {
+    "lr": 0.1999,
+    "xgb": 0.1983,
+    "gb": 0.1989,
+    "svm": 0.202,
+    "cb": 0.2009
+  },
+  "model_f1": {
+    "logistic_regression": 0.9045,
+    "xgboost": 0.8976,
+    "gradient_boosting": 0.9001,
+    "svm": 0.9141,
+    "lightgbm": 0.0,
+    "catboost": 0.9091,
+    "ensemble": 0.9148
+  },
+  "ensemble_auc": 0.9462,
+  "threshold": 0.5
+}

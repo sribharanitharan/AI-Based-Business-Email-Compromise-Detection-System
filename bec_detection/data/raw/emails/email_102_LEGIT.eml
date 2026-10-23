@@ -1,0 +1,19 @@
+From: scrum@company.com
+To: sribharani101@gmail.com
+Date: Fri, 09 Oct 2026 02:02:44 +0530
+Subject: Sprint 42 Retrospective & Backlog Refinement #102
+Message-ID: <legit-102-31078@corp-mail.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Authentication-Results: mx.google.com; spf=pass smtp.mailfrom=scrum@company.com; dkim=pass; dmarc=pass
+Received-SPF: pass (google.com: domain designates sender IP)
+
+Hi team,
+
+Tomorrow at 10 AM we will hold our Sprint 42 retrospective. Please update Jira tickets and log your remaining story points beforehand.
+
+Link to meeting: https://zoom.us/j/9482710492
+
+Thanks,
+Scrum Master

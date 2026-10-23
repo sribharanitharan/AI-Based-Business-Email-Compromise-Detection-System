@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BEC Shield – AI Email Threat Detection</title>
+  <meta name="description" content="AI-powered Business Email Compromise detection system using machine learning to identify fraudulent emails in real time." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🛡️</div>
+    <div>
+      <div class="logo-title">BEC Shield</div>
+      <div class="logo-sub">AI Threat Detection</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <a class="nav-item active" href="#" onclick="showPage('analyze',this)">
+      <span class="nav-icon">🔍</span><span>Analyze Email</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showPage('thread',this)">
+      <span class="nav-icon">🧵</span><span>Thread Analysis</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showPage('dashboard',this)">
+      <span class="nav-icon">📊</span><span>Dashboard</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showPage('stream',this)">
+      <span class="nav-icon">📡</span><span>Live Inbox Stream</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showPage('models',this)">
+      <span class="nav-icon">⚖️</span><span>Model Comparison</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showPage('history',this)">
+      <span class="nav-icon">📋</span><span>History</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showPage('review',this)">
+      <span class="nav-icon">🧑‍💻</span><span>Review Queue</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showPage('threat',this)">
+      <span class="nav-icon">🌐</span><span>Threat Intel</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showPage('about',this)">
+      <span class="nav-icon">ℹ️</span><span>About</span>
+    </a>
+  </nav>
+  <div class="sidebar-status" id="sidebarStatus">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Checking...</span>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══════════════════════════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-title" id="pageTitle">Analyze Email</div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" id="liveTrafficBtn" onclick="toggleLiveTraffic()" style="border:1px solid #38bdf8; color:#38bdf8; font-weight:600;">
+        ⚡ Live Traffic Stream
+      </button>
+      <div class="topbar-badge" id="topbarBadge">AI Models Active</div>
+      <div class="topbar-time" id="topbarTime"></div>
+    </div>
+  </header>
+
+  <!-- ── PAGE: ANALYZE ───────────────────────────────────────────────────── -->
+  <section class="page active" id="page-analyze">
+    <div class="analyze-grid">
+
+      <!-- Email Input Form -->
+      <div class="card glass">
+        <div class="card-header">
+          <h2 class="card-title">📧 Email Input</h2>
+          <div class="card-subtitle">Paste or type email details below</div>
+        </div>
+        <div class="form-group">
+          <label class="label">Subject</label>
+          <input class="input" id="f-subject" placeholder="Email subject line..." />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="label">From</label>
+            <input class="input" id="f-from" placeholder="sender@domain.com" />
+          </div>
+          <div class="form-group">
+            <label class="label">To</label>
+            <input class="input" id="f-to" placeholder="recipient@company.com" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="label">Reply-To <span class="label-hint">(leave blank if same as From)</span></label>
+          <input class="input" id="f-replyto" placeholder="replyto@different.com" />
+        </div>
+        <div class="form-group">
+          <label class="label">Email Body</label>
+          <textarea class="textarea" id="f-body" rows="7" placeholder="Paste the full email body here..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="label">URLs in Email <span class="label-hint">(one per line)</span></label>
+          <textarea class="textarea" id="f-urls" rows="3" placeholder="https://example.com&#10;http://bit.ly/suspicious"></textarea>
+        </div>
+        <div class="btn-row" style="flex-wrap: wrap; gap: 8px;">
+          <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeEmail()">
+            <span class="btn-icon">🔍</span> Analyze Email
+          </button>
+          <label class="btn btn-ghost" style="cursor:pointer; display:inline-flex; align-items:center;">
+            <span>📁 Upload .EML File</span>
+            <input type="file" id="emlFileInput" accept=".eml" onchange="uploadEmlFile(this)" style="display:none;" />
+          </label>
+          <button class="btn btn-ghost" onclick="loadSample('bec')">🔴 CEO Wire Scam</button>
+          <button class="btn btn-ghost" onclick="loadSample('payroll')">💸 Payroll Scam</button>
+          <button class="btn btn-ghost" onclick="loadSample('gift')">🎁 Gift Card Scam</button>
+          <button class="btn btn-ghost" onclick="loadSample('legit')">✅ Legit Meeting</button>
+          <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+        </div>
+      </div>
+
+      <!-- Result Panel -->
+      <div class="result-panel" id="resultPanel">
+        <div class="result-empty" id="resultEmpty">
+          <div class="empty-icon">🛡️</div>
+          <div class="empty-title">Ready to Analyze</div>
+          <div class="empty-sub">Submit an email to get an AI-powered threat assessment</div>
+        </div>
+
+        <div class="result-content hidden" id="resultContent">
+          <!-- Risk Score Ring -->
+          <div class="score-ring-wrap">
+            <div class="score-ring" id="scoreRing">
+              <svg viewBox="0 0 120 120" class="ring-svg">
+                <circle class="ring-bg" cx="60" cy="60" r="52" />
+                <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="52"
+                  stroke-dasharray="326.7" stroke-dashoffset="326.7" />
+              </svg>
+              <div class="ring-text">
+                <div class="ring-score" id="ringScore">0%</div>
+                <div class="ring-label">Risk Score</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Risk Badge -->
+          <div class="risk-badge-wrap">
+            <div class="risk-badge" id="riskBadge">—</div>
+            <div class="bec-type" id="becType"></div>
+          </div>
+
+          <!-- Action Box -->
+          <div class="action-box" id="actionBox">
+            <span class="action-icon">⚡</span>
+            <span id="actionText">—</span>
+          </div>
+
+          <!-- Model Scores -->
+          <div class="model-scores">
+            <div class="ms-title">Individual Model Scores</div>
+            <div class="ms-grid" id="modelScoresGrid"></div>
+          </div>
+
+          <!-- SHAP Waterfall -->
+          <div class="shap-section" id="shapSection" style="display:none">
+            <div class="flags-title">🧠 SHAP Feature Importance</div>
+            <div id="shapList"></div>
+          </div>
+
+          <!-- Flags -->
+          <div class="flags-section" id="flagsSection">
+            <div class="flags-title">🚩 Threat Indicators</div>
+            <div id="flagsList"></div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="result-actions" id="resultActions">
+            <button class="btn btn-ghost btn-sm" id="pdfBtn" onclick="downloadReport()">
+              📄 Download PDF Report
+            </button>
+            <button class="btn btn-ghost btn-sm" id="feedbackBecBtn" onclick="submitFeedback('BEC')">
+              🚨 Mark as BEC
+            </button>
+            <button class="btn btn-ghost btn-sm" id="feedbackLegitBtn" onclick="submitFeedback('LEGITIMATE')">
+              ✅ Mark as Legit
+            </button>
+          </div>
+
+          <!-- Meta -->
+          <div class="result-meta" id="resultMeta"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: THREAD ANALYSIS ───────────────────────────────────────────── -->
+  <section class="page" id="page-thread">
+    <div class="card glass">
+      <div class="card-header">
+        <h2 class="card-title">🧵 Email Thread Analysis</h2>
+        <div class="card-subtitle">Analyze a full email conversation for thread hijacking, topic drift, and participant injection</div>
+      </div>
+
+      <div id="threadEmails">
+        <!-- Thread email slots added dynamically -->
+      </div>
+
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn btn-primary" id="threadAddBtn" onclick="addThreadEmail()">
+          <span class="btn-icon">➕</span> Add Email to Thread
+        </button>
+        <button class="btn btn-ghost" onclick="loadThreadSample()">Load Sample Thread</button>
+        <button class="btn btn-ghost" onclick="clearThread()">Clear Thread</button>
+        <button class="btn btn-primary" id="threadAnalyzeBtn" onclick="analyzeThread()">
+          <span class="btn-icon">🔍</span> Analyze Thread
+        </button>
+      </div>
+    </div>
+
+    <!-- Thread Result -->
+    <div class="card glass" id="threadResult" style="display:none; margin-top:16px">
+      <div class="card-header">
+        <h3 class="card-title">Thread Analysis Results</h3>
+      </div>
+      <div id="threadResultContent"></div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: DASHBOARD ─────────────────────────────────────────────────── -->
+  <section class="page" id="page-dashboard">
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card glass">
+        <div class="stat-icon">📧</div>
+        <div class="stat-val" id="s-total">—</div>
+        <div class="stat-label">Emails Analyzed</div>
+      </div>
+      <div class="stat-card glass danger-bg">
+        <div class="stat-icon">🚨</div>
+        <div class="stat-val" id="s-bec">—</div>
+        <div class="stat-label">BEC Detected</div>
+      </div>
+      <div class="stat-card glass safe-bg">
+        <div class="stat-icon">✅</div>
+        <div class="stat-val" id="s-legit">—</div>
+        <div class="stat-label">Legitimate</div>
+      </div>
+      <div class="stat-card glass warn-bg">
+        <div class="stat-icon">📈</div>
+        <div class="stat-val" id="s-rate">—</div>
+        <div class="stat-label">Detection Rate</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-icon">🧑‍💻</div>
+        <div class="stat-val" id="s-uncertain">—</div>
+        <div class="stat-label">Uncertain (Review)</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-icon">💬</div>
+        <div class="stat-val" id="s-feedback">—</div>
+        <div class="stat-label">Analyst Feedback</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+      <div class="card glass chart-card">
+        <div class="card-header"><h3 class="card-title">Risk Distribution</h3></div>
+        <div class="chart-wrap"><canvas id="riskChart"></canvas></div>
+      </div>
+      <div class="card glass chart-card">
+        <div class="card-header"><h3 class="card-title">Model Performance (F1 Scores)</h3></div>
+        <div class="chart-wrap"><canvas id="modelChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- BEC Type Breakdown -->
+    <div class="charts-row">
+      <div class="card glass chart-card">
+        <div class="card-header"><h3 class="card-title">BEC Attack Type Breakdown</h3></div>
+        <div class="chart-wrap"><canvas id="becTypeChart"></canvas></div>
+      </div>
+      <div class="card glass" style="flex:1; min-width:260px">
+        <div class="card-header"><h3 class="card-title">Quick Actions</h3></div>
+        <div style="padding: 0 4px 16px">
+          <button class="btn btn-ghost" style="width:100%;margin-bottom:8px" onclick="exportCSV()">
+            📥 Export History as CSV
+          </button>
+          <button class="btn btn-ghost" style="width:100%;margin-bottom:8px" onclick="showPage('review', document.querySelector('.nav-item:nth-child(5)'))">
+            🧑‍💻 Open Review Queue
+          </button>
+          <button class="btn btn-ghost" style="width:100%" onclick="showPage('threat', document.querySelector('.nav-item:nth-child(6)'))">
+            🌐 Threat Intel Status
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUC Banner -->
+    <div class="card glass auc-banner">
+      <div class="auc-label">Ensemble ROC-AUC Score</div>
+      <div class="auc-value" id="aucValue">—</div>
+      <div class="auc-sub">Higher is better · Max = 1.0</div>
+      <div class="auc-bar-wrap"><div class="auc-bar" id="aucBar"></div></div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: HISTORY ───────────────────────────────────────────────────── -->
+  <section class="page" id="page-history">
+    <div class="history-header">
+      <h2 class="card-title">Email Analysis History</h2>
+      <div class="btn-row">
+        <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 Export CSV</button>
+        <button class="btn btn-ghost btn-sm" onclick="clearHistory()">🗑 Clear History</button>
+      </div>
+    </div>
+    <div class="card glass">
+      <div id="historyTable">
+        <div class="history-empty">No emails analyzed yet. Go to Analyze Email to get started.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: REVIEW QUEUE ─────────────────────────────────────────────── -->
+  <section class="page" id="page-review">
+    <div class="card glass">
+      <div class="card-header">
+        <h2 class="card-title">🧑‍💻 Analyst Review Queue</h2>
+        <div class="card-subtitle">Emails with uncertain risk scores (40–60%) awaiting analyst review</div>
+      </div>
+      <div id="reviewQueue">
+        <div class="history-empty">No uncertain emails in queue. Analyze some emails first.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: THREAT INTEL ─────────────────────────────────────────────── -->
+  <section class="page" id="page-threat">
+    <div class="card glass">
+      <div class="card-header">
+        <h2 class="card-title">🌐 Threat Intelligence Feeds</h2>
+        <div class="card-subtitle">Active IOC feeds and threat data sources</div>
+      </div>
+      <div id="threatFeedList">
+        <div class="history-empty">Loading threat intel status...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: ABOUT ─────────────────────────────────────────────────────── -->
+  <section class="page" id="page-about">
+    <div class="about-grid">
+      <div class="card glass">
+        <div class="card-header">
+          <h2 class="card-title">🛡️ About BEC Shield</h2>
+        </div>
+        <p class="about-text">BEC Shield is an AI-powered cybersecurity system that uses ensemble Machine Learning to detect Business Email Compromise (BEC) attacks in real time. It analyzes email content, headers, URLs, sender patterns, and social engineering signals.</p>
+        <div class="tech-tags">
+          <span class="tag">Python</span><span class="tag">FastAPI</span>
+          <span class="tag">XGBoost</span><span class="tag">Gradient Boosting</span>
+          <span class="tag">Logistic Regression</span><span class="tag">SVM</span>
+          <span class="tag">VADER NLP</span><span class="tag">SMOTE</span>
+          <span class="tag">SHAP</span><span class="tag">Ensemble Voting</span>
+          <span class="tag">Thread Analysis</span><span class="tag">Active Learning</span>
+        </div>
+      </div>
+
+      <div class="card glass">
+        <div class="card-header"><h3 class="card-title">🎯 BEC Attack Types Detected</h3></div>
+        <div class="attack-list">
+          <div class="attack-item"><span class="attack-dot red"></span>CEO Fraud / Wire Transfer</div>
+          <div class="attack-item"><span class="attack-dot orange"></span>Invoice Manipulation</div>
+          <div class="attack-item"><span class="attack-dot yellow"></span>Payroll Diversion</div>
+          <div class="attack-item"><span class="attack-dot orange"></span>Account Compromise</div>
+          <div class="attack-item"><span class="attack-dot red"></span>Credential Phishing</div>
+          <div class="attack-item"><span class="attack-dot yellow"></span>Attorney Impersonation</div>
+          <div class="attack-item"><span class="attack-dot red"></span>Thread Hijacking</div>
+          <div class="attack-item"><span class="attack-dot orange"></span>Supply Chain BEC</div>
+        </div>
+      </div>
+
+      <div class="card glass">
+        <div class="card-header"><h3 class="card-title">⚙️ Feature Modules</h3></div>
+        <div class="feature-list">
+          <div class="feature-item">📝 Linguistic Deception Analysis</div>
+          <div class="feature-item">🎭 Social Engineering Pattern Detection</div>
+          <div class="feature-item">🔗 URL Reputation Scoring</div>
+          <div class="feature-item">📨 Email Header Forensics</div>
+          <div class="feature-item">😊 Sentiment Analysis (VADER)</div>
+          <div class="feature-item">📊 Domain Lookalike Detection</div>
+          <div class="feature-item">🔄 SMOTE Class Balancing</div>
+          <div class="feature-item">🏆 Weighted Ensemble Scoring</div>
+          <div class="feature-item">🧵 Thread Context Analysis</div>
+          <div class="feature-item">🧠 SHAP Explainability</div>
+        </div>
+      </div>
+
+      <div class="card glass">
+        <div class="card-header"><h3 class="card-title">📊 Risk Level Guide</h3></div>
+        <div class="risk-guide">
+          <div class="rg-item"><span class="rg-badge critical">CRITICAL</span><span>Block + Alert Admin (≥75%)</span></div>
+          <div class="rg-item"><span class="rg-badge high">HIGH</span><span>Quarantine + Alert User (55–75%)</span></div>
+          <div class="rg-item"><span class="rg-badge medium">MEDIUM</span><span>Flag for Review (30–55%)</span></div>
+          <div class="rg-item"><span class="rg-badge low">LOW</span><span>Safe to Deliver (&lt;30%)</span></div>
+        </div>
+      </div>
+
+      <!-- API Reference card -->
+      <div class="card glass">
+        <div class="card-header"><h3 class="card-title">🔌 API Endpoints</h3></div>
+        <div class="feature-list" style="font-family:var(--font-mono);font-size:12px;gap:6px">
+          <div class="feature-item">POST /api/analyze</div>
+          <div class="feature-item">POST /api/analyze/batch</div>
+          <div class="feature-item">POST /api/analyze/thread</div>
+          <div class="feature-item">POST /api/feedback</div>
+          <div class="feature-item">GET  /api/explain/{email_id}</div>
+          <div class="feature-item">GET  /api/report/{email_id}</div>
+          <div class="feature-item">GET  /api/export/csv</div>
+          <div class="feature-item">GET  /api/threat-intel</div>
+          <div class="feature-item">GET  /api/stats</div>
+          <div class="feature-item">GET  /api/history</div>
+        </div>
+        <a href="/docs" target="_blank" class="btn btn-ghost btn-sm" style="margin:12px 0 0 0;display:inline-block">
+          📖 Open Swagger UI →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE: LIVE INBOX STREAM ────────────────────────────────────────── -->
+  <section class="page" id="page-stream">
+    <!-- Mailbox Header Card -->
+    <div class="card glass" style="margin-bottom:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:24px;">📬</span>
+            <div>
+              <h2 class="card-title" style="margin:0;">Live Mailbox Stream & Auto-Detection</h2>
+              <div class="card-subtitle" style="margin-top:2px;">
+                Monitoring Target: <strong id="streamTargetMail" style="color:#38bdf8; font-family:var(--font-mono)">sribharani101@gmail.com</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="streamToggleBtn" onclick="toggleStreamAutoScan()">
+            <span id="streamToggleIcon">▶</span> <span id="streamToggleText">Start Live Auto-Scan</span>
+          </button>
+          <button class="btn btn-ghost" onclick="fetchNextLiveEmail()">
+            ⚡ Fetch Next Email Now
+          </button>
+          <button class="btn btn-ghost" id="scanFolderBtn" onclick="scan100MailboxFolder()" style="border:1px solid #10b981; color:#10b981; font-weight:600;">
+            📂 Scan 120+ Mailbox Folder
+          </button>
+          <button class="btn btn-ghost" onclick="toggleMailboxSettings()">
+            ⚙️ IMAP Config
+          </button>
+          <button class="btn btn-ghost" onclick="clearStreamFeed()">
+            🧹 Clear Feed
+          </button>
+        </div>
+      </div>
+
+      <!-- Optional IMAP App Password settings -->
+      <div id="mailboxSettingsPanel" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+        <div style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">
+          To connect to your real live Gmail inbox via IMAP SSL, enter your Google 16-character App Password (from Google Account &gt; Security &gt; App Passwords). If left blank, the system automatically runs a realistic real-time simulated feed for <strong>sribharani101@gmail.com</strong>.
+        </div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+          <input class="input" id="cfg-email" value="sribharani101@gmail.com" style="max-width:240px" placeholder="Email Address" />
+          <input class="input" type="password" id="cfg-app-pass" style="max-width:240px" placeholder="Gmail App Password (optional)" />
+          <button class="btn btn-primary btn-sm" onclick="saveMailboxConfig()">Connect &amp; Sync</button>
+          <span id="imapConnStatus" style="font-size:12px; font-weight:600; color:#38bdf8;">🟢 Live Feed Ready</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Stream 2-Column Grid -->
+    <div style="display:grid; grid-template-columns: 1fr 1.1fr; gap:20px; align-items:start;">
+
+      <!-- Left Column: Current Active Email Inspection -->
+      <div class="card glass" id="liveActiveEmailCard">
+        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3 class="card-title" id="activeEmailSubject">Awaiting Next Email...</h3>
+            <div class="card-subtitle" id="activeEmailSender">Stream will auto-inspect incoming messages</div>
+          </div>
+          <div id="activeEmailBadge" class="risk-badge low">READY</div>
+        </div>
+
+        <div id="liveEmailBodyWrap" style="margin:16px 0; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px; font-size:13px; max-height:220px; overflow-y:auto; line-height:1.6; color:var(--text-secondary); white-space:pre-wrap;">No email scanned yet. Click "Start Live Auto-Scan" or "Fetch Next Email Now".</div>
+
+        <!-- Model Agreement & Scores for Current Email -->
+        <div style="margin-top:16px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Multi-Model Score Breakdown</div>
+          <div id="liveModelBars" style="display:flex; flex-direction:column; gap:6px;"></div>
+        </div>
+
+        <!-- Active Flags -->
+        <div id="liveFlagsSection" style="margin-top:16px; display:none;">
+          <div class="flags-title" style="margin-bottom:8px;">⚠️ Security Indicators Triggered</div>
+          <div id="liveFlagsList"></div>
+        </div>
+      </div>
+
+      <!-- Right Column: Live Ticker Feed (Emails arriving sequentially) -->
+      <div class="card glass">
+        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3 class="card-title">📡 Live Incoming Feed</h3>
+            <div class="card-subtitle">Real-time dynamic stream arriving for <span style="color:#38bdf8">sribharani101@gmail.com</span></div>
+          </div>
+          <div style="font-size:12px; font-family:var(--font-mono); color:var(--text-muted);">
+            Scanned: <span id="streamCount" style="color:#38bdf8; font-weight:700;">0</span>
+          </div>
+        </div>
+        <div id="streamTickerList" style="display:flex; flex-direction:column; gap:10px; max-height:600px; overflow-y:auto; padding-right:4px;">
+          <div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-size:13px;">
+            <div style="font-size:32px; margin-bottom:8px;">⏳</div>
+            Live feed waiting to receive emails.<br/>Click <strong>Start Live Auto-Scan</strong> to begin streaming!
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── PAGE: MODEL COMPARISON ────────────────────────────────────────────── -->
+  <section class="page" id="page-models">
+    <!-- Header Banner -->
+    <div class="card glass" style="margin-bottom:20px;">
+      <div class="card-header">
+        <h2 class="card-title">⚖️ Multi-Model Benchmarking & Comparison</h2>
+        <div class="card-subtitle">Evaluating performance, feature specializations, and ensemble agreement across all 6 model families</div>
+      </div>
+    </div>
+
+    <!-- Comparison Chart & Agreement Gauge -->
+    <div class="charts-row" style="margin-bottom:20px;">
+      <div class="card glass chart-card" style="flex:1.5;">
+        <div class="card-header">
+          <h3 class="card-title">Live Score Divergence & Agreement (Latest Email)</h3>
+        </div>
+        <div class="chart-wrap" style="height:260px;">
+          <canvas id="liveModelComparisonChart"></canvas>
+        </div>
+      </div>
+      <div class="card glass" style="flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center; padding:24px;">
+        <div style="font-size:13px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">Ensemble Consensus Rate</div>
+        <div id="ensembleConsensusVal" style="font-size:42px; font-weight:800; font-family:var(--font-mono); color:#10b981; margin-bottom:4px;">100%</div>
+        <div style="font-size:12px; color:var(--text-muted);" id="ensembleConsensusDesc">All 6 models in unified agreement</div>
+        <div style="margin-top:20px; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid rgba(255,255,255,0.06); font-size:12px; text-align:left;">
+          <div style="font-weight:700; margin-bottom:4px; color:#38bdf8;">Consensus Strategy:</div>
+          Weighted soft-voting meta-ensemble combining Gradient Boosted Trees, Margin Kernels, and Deep Anomaly Trees.
+        </div>
+      </div>
+    </div>
+
+    <!-- Model Matrix Cards Grid -->
+    <div id="modelMatrixGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:16px; margin-bottom:20px;"></div>
+
+    <!-- Comprehensive Metrics Table -->
+    <div class="card glass">
+      <div class="card-header">
+        <h3 class="card-title">📊 Detailed Model Metrics Table</h3>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Architecture Family</th>
+              <th>Ensemble Weight</th>
+              <th>F1 Score</th>
+              <th>Detection Specialization</th>
+              <th>Inference Latency</th>
+            </tr>
+          </thead>
+          <tbody id="modelComparisonTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══ NOTIFICATION TOAST ════════════════════════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

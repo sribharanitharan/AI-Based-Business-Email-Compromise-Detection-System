@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  bec-shield-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bec_shield_core
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - PYTHONUNBUFFERED=1
+      - ABUSEIPDB_KEY=${ABUSEIPDB_KEY:-}
+      - VIRUSTOTAL_KEY=${VIRUSTOTAL_KEY:-}
+      - ALERT_WEBHOOK_URL=${ALERT_WEBHOOK_URL:-}
+    volumes:
+      - ./models:/app/models
+      - ./reports:/app/reports
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

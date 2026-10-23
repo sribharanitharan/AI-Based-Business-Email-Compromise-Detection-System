@@ -1,0 +1,25 @@
+From: Accounts Receivable <billing@cloud-sys-vendor.com>
+To: sribharani101@gmail.com
+Date: Sun, 11 Oct 2026 16:32:44 +0530
+Subject: Overdue Invoice #INV-2026-9042 - Updated Remittance Account
+Message-ID: <bec-107-15387@corp-mail.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Authentication-Results: mx.google.com; spf=softfail smtp.mailfrom=Accounts Receivable <billing@cloud-sys-vendor.com>; dkim=fail; dmarc=fail
+Received-SPF: softfail (google.com: domain designates sender IP)
+Reply-To: payments-desk@billing-cloud.xyz
+
+Dear Valued Customer,
+
+Please be advised that our banking partner has changed due to annual financial audits. All pending remittances for Invoice #INV-2026-9042 ($38,750.00) must now be wired to our new clearing account:
+
+Bank: Citibank NA
+Routing: 021000089
+Account: 9948271034
+Beneficiary: Cloud Systems International
+
+Please do NOT send funds to our previous coordinates.
+
+Sincerely,
+Billing Dept.
