@@ -4,6 +4,14 @@ An enterprise-grade cyber threat intelligence (CTI) and machine learning solutio
 
 ---
 
+## 🏗️ System Architecture
+
+![BEC Detection System Architecture](architecture_flow.jpg)
+
+> **7-Layer pipeline**: Email Ingestion → Feature Extraction → Multi-Tier ML Models → Stacking Ensemble → Explainability (SHAP/LIME) → FastAPI → Dashboard & Alerts
+
+---
+
 ## 🚀 Key Features
 
 - **Multi-Tier Model Ensemble**:
